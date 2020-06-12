@@ -21,7 +21,7 @@ export abstract class S3Service {
         });
     }
 
-    public static async getBucketContents(bucketName: string): Promise<string[]> {
+    public static async getBucketContents(bucketName: string): Promise<DirectoryTree> {
         const output: string[] = [];
         const s3 = this.getFilebaseS3();
         const params: S3.ListObjectsV2Request = { Bucket: bucketName };
@@ -36,7 +36,7 @@ export abstract class S3Service {
             }
             moreObjects = response.NextContinuationToken !== undefined;
         }
-        return output;
+        return this.constructDirectoryTree(output);
     }
 
     public static constructDirectoryTree(keys: string[], path: string = ''): DirectoryTree {
